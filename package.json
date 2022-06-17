@@ -1,0 +1,24 @@
+{
+  "name": "commission-calculator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://ahsanhabibleon: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@github.com/ahsanhabibleon/commission-calculator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ahsanhabibleon/commission-calculator/issues"
+  },
+  "homepage": "https://github.com/ahsanhabibleon/commission-calculator#readme",
+  "dependencies": {
+    "moment": "^2.29.3",
+    "node-fetch": "^3.2.6"
+  }
+}
