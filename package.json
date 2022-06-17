@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -20,5 +21,12 @@
   "dependencies": {
     "moment": "^2.29.3",
     "node-fetch": "^3.2.6"
+  },
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "eslint": "^8.17.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "mocha": "^10.0.0"
   }
 }
