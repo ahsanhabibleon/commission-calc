@@ -1,43 +1,18 @@
 // used to fetch data from the api
-import moment from 'moment';
-import fetch from 'node-fetch';
-import fs from 'fs';
+import dotenv from 'dotenv';
+import {
+    getStartOfTheWeek, isNonEmptyArray, isValidJSON, responseFromApi,
+} from './utils.js';
+
+dotenv.config();
 
 // get the third argument from the command line
 const arg = process.argv?.[2] || null;
 
 // commissions for each user
-const cashInCommission = {
-    percents: 0.03,
-    max: {
-        amount: 5,
-        currency: 'EUR',
-    },
-};
-const cashOutCommissionNatural = {
-    percents: 0.3,
-    week_limit: {
-        amount: 1000,
-        currency: 'EUR',
-    },
-};
-
-const cashOutCommissionJuridical = {
-    percents: 0.3,
-    min: {
-        amount: 0.5,
-        currency: 'EUR',
-    },
-};
-
-// Check if the data is is an array and
-const isNonEmptyArray = (data) => Array.isArray(data) && (data.length > 0);
-
-// Check if the data has correct data structure
-const isValidJSON = (data) => ['date', 'user_id', 'user_type', 'type', 'operation'].every((x) => x in data[0]);
-
-// Get the start day of the week
-const getStartOfTheWeek = (date) => moment(date).startOf('isoWeek').format('YYYY-MM-DD');
+const cashInCommission = await responseFromApi(process.env.CASH_IN_COMMISSION_API);
+const cashOutCommissionNatural = await responseFromApi(process.env.CASH_OUT_COMMISSION_NATURAL_API);
+const cashOutCommissionJuridical = await responseFromApi(process.env.CASH_OUT_COMMISSION_JURIDICAL_API);
 
 // Get all cash-outs for a specific natural user
 const getAllCashOutsThisWeekForNaturalUsers = (data, userId, today, weekStart) => data.filter((item) => item.date >= weekStart && item.date <= today && item.user_id === userId && item.type === 'cash_out' && item.user_type === 'natural');
@@ -62,19 +37,7 @@ const totalCashOutCommissionPerWeekPerNaturalUser = (data, userId, todaysAmount,
     return commissionAfterDecuction;
 };
 
-// Get the data from a local JSON file or from the API
-const responseFromApi = async (_arg) => {
-    if (_arg.includes('.json')) {
-        if (fs.existsSync(_arg)) {
-            return JSON.parse(fs.readFileSync(_arg, 'utf8'));
-        }
-        return 'File does not exist!';
-    }
-    return fetch(_arg).then((data) => data?.json() || null).catch(() => {
-        process.stdout.write('1.Please provide a valid path with valid data!!');
-    });
-};
-
+// get commission accordion to the type of operation
 const getCommission = (type, userType) => {
     if (type === 'cash_in') {
         return cashInCommission;
@@ -85,6 +48,7 @@ const getCommission = (type, userType) => {
     return cashOutCommissionJuridical;
 };
 
+// Calculate the commission for each user
 const getValidCommissionAmount = (type, userType, comissionAmount, totalCashOut, maxAmount, minAmount) => {
     if (type === 'cash_in') {
         return comissionAmount < maxAmount ? comissionAmount : maxAmount;
@@ -95,6 +59,7 @@ const getValidCommissionAmount = (type, userType, comissionAmount, totalCashOut,
     return comissionAmount > minAmount ? comissionAmount : minAmount;
 };
 
+// Calculate the valid commission for each user
 const calculateValidCommissionAmount = (validData) => validData?.map((item) => {
     const {
         date, user_id: userId, user_type: userType, type, operation,
@@ -140,10 +105,8 @@ if (arg) {
     process.stdout.write('5.Please provide a path to the data input file!!');
 }
 
+// export functions for test
 export {
-    isNonEmptyArray,
-    isValidJSON,
-    getStartOfTheWeek,
     getAllCashOutsThisWeekForNaturalUsers,
     getCommissionAfterDecuction,
     totalCashOutCommissionPerWeekPerNaturalUser,

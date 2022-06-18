@@ -3,8 +3,6 @@ import { describe, it } from 'mocha';
 import chai from 'chai';
 
 import {
-    isNonEmptyArray,
-    getStartOfTheWeek,
     getAllCashOutsThisWeekForNaturalUsers,
     getCommissionAfterDecuction,
     totalCashOutCommissionPerWeekPerNaturalUser,
@@ -13,6 +11,7 @@ import {
     getCommission,
     responseFromApi,
 } from '../index.js';
+import { getStartOfTheWeek, isNonEmptyArray } from '../utils.js';
 
 const { expect } = chai;
 
