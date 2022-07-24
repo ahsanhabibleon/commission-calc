@@ -9,7 +9,6 @@
 5. Test the project (`npm test`)
 
 # Problem to solve
-=================
 
 ## Situation
 Users can go to a branch to cash in and/or cash out from their account. There are also commission fees for both cash in and cash out. Only supported currency is EUR.
@@ -60,7 +59,6 @@ Program must output result to stdout.
 Result - calculated commission fees for each operation. In each line only final calculated commission fee must be provided without currency.
 
 Example Data
-============
 ```
 ➜  cat input.json
 [
